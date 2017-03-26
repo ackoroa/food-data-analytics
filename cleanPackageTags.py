@@ -27,7 +27,7 @@ if __name__ == "__main__":
                 tag = 'can'
             if tag == 'plsatique' or tag == 'plastiktute' or tag == 'plastique' or tag == 'palstique' or tag == 'plastiqeu' or tag == 'plastiqe' or tag == 'plastque' or tag == 'platique' or tag == 'plastc' or tag == 'plastico' or tag == 'platic':
                 tag = 'plastic'
-            if tag == 'aluminum' or tag == 'alluminum' or tag == 'alu':
+            if tag == 'aluminum' or tag == 'alluminum' or tag == 'alu' or tag == 'alimunium' or tag == 'alluminium' or tag == 'aluminiumn' or tag == 'alumium' or tag == 'aluminise' or tag == 'aluminized' or tag == 'aluminiumbeutel' or tag == 'aluminiumblikken' or tag == 'aluminiumburk' or tag == 'alumina' or tag == 'aluminee' or tag == 'alumminium':
                 tag = 'aluminium'
             if tag == 'barquette':
                 tag = 'tray'
