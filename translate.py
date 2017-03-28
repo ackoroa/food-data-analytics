@@ -2,7 +2,7 @@ import requests
 import xml.etree.ElementTree as ET
 import pymongo
 
-SERVICE_TOKEN = ''
+SERVICE_TOKEN = '6ae5a2dea8c44720908de69d04a5ba23'
 
 def getToken():
     issueTokenUrl = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
@@ -31,26 +31,25 @@ if __name__ == "__main__":
     db = pymongo.MongoClient().off
 
     # query input documents
-    count = db.products.count({'packaging_tags.0': {'$exists': True}})
+    count = db.products.count({'product_name': {'$exists': True}})
     cur = db.products.find(
-        {'packaging_tags.0': {'$exists': True}}, 
-        {'_id': 1, 'packaging_tags': 1})
+        {'product_name': {'$exists': True}}, 
+        {'_id': 1, 'product_name': 1})
 
     token = getToken()
     translations = {}
     i = 0
     for data in cur:
         # translate
-        packaging_tags_en = []
-        for tag in data['packaging_tags']:
-            if not tag in translations:
-                translations[tag], token = translate(tag, token)
-            packaging_tags_en.append(translations[tag])
+        name = data['product_name']
+        if not name in translations:
+            translations[name], token = translate(name, token)
+        name_en = translations[name]
         
         # insert translation to document by id
         db.products.update_one(
             {'_id':data['_id']}, 
-            {'$set': {'packaging_tags_en': packaging_tags_en}}, 
+            {'$set': {'product_name_en': name_en}}, 
             upsert=False)
 
         i += 1
