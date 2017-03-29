@@ -4,9 +4,14 @@ from scipy.spatial.distance import pdist, squareform
 from sklearn.cluster import AgglomerativeClustering
 
 col_name = 'product_simplified'
-field_name = 'ingredients'
-input_limit = 100
-n_cluster = 10
+field_name = 'packaging'
+
+input_limit = 150000
+n_cluster_start = 100
+n_cluster_stop = 10000
+n_cluster_step = 100
+
+output_field = '_id'
 
 def pairwise_jaccard(X):
     return squareform(pdist(X, metric='jaccard'))
@@ -15,6 +20,18 @@ def pool_tags(tags, axis=1):
     dist = pairwise_jaccard(tags)
     dist_sum = np.sum(dist, axis=0)
     return tags[np.argmin(dist_sum)]
+
+def cluster_radius(tags):
+    dist = pairwise_jaccard(tags)
+    dist_sum = np.sum(dist, axis=0)
+    dist_avg = np.average(dist, axis=0)
+    return dist_avg[np.argmin(dist_sum)]
+
+def cluster_density(tags):
+    radius = cluster_radius(tags)
+    if radius <= 0:
+        return 0
+    return len(tags) / radius**2
 
 def get_tag_idx_dict(db):
     cur = db.get_collection(field_name + "_idx").find()
@@ -36,10 +53,11 @@ def get_data(db, max_tag):
     tags = []
     tag_names = []
     for data in cur:
-        ids.append(data['product_name'])
+        ids.append(data[output_field])
         tagIdxs = np.zeros(max_tag + 1)
         for tag in data[field_name]:
-            tagIdxs[tag_idx[tag]] = 1
+            if tag in tag_idx:
+                tagIdxs[tag_idx[tag]] = 1
         tags.append(tagIdxs)
         tag_names.append(data[field_name])
     
@@ -50,15 +68,25 @@ if __name__ == "__main__":
 
     tag_idx, max_tag = get_tag_idx_dict(db)
     ids, tags, tag_names = get_data(db, max_tag)
-    
-    clustering = AgglomerativeClustering(affinity=pairwise_jaccard, pooling_func=pool_tags, linkage='complete', n_clusters=n_cluster)
-    labels = clustering.fit_predict(np.vstack(tags))
-    
-    clusters = {}
-    for i in range(len(ids)):
-        if not labels[i] in clusters:
-            clusters[labels[i]] = []
-        clusters[labels[i]].append(ids[i])
 
-    for i in clusters:
-        print i, ':', clusters[i], '\n'
+    for n_cluster in range(n_cluster_start, n_cluster_stop, n_cluster_step):    
+        clustering = AgglomerativeClustering(
+            affinity=pairwise_jaccard, 
+            pooling_func=pool_tags, 
+            linkage='complete', 
+            compute_full_tree=True,
+            memory='cluster_cache/',
+            n_clusters=n_cluster)
+        clusters = clustering.fit(np.vstack(tags))
+        labels = clusters.labels_
+
+        clusters = {}
+        for i in range(len(tags)):
+            if not labels[i] in clusters:
+                clusters[labels[i]] = []
+            clusters[labels[i]].append(tags[i])
+
+        cluster_densities = []
+        for i in clusters:
+            cluster_densities.append(cluster_density(np.vstack(clusters[i])))
+        print n_cluster, ':', np.min(cluster_densities), np.average(cluster_densities), np.max(cluster_densities)

@@ -2,21 +2,21 @@ cur = db.product_simplified.aggregate(
     [
         {
             $match: {
-                "ingredients.0" : {$exists: true}
+                "packaging.0" : {$exists: true}
             }
         },
         {
             $project: {
                 _id: 0,
-                ingredients: 1
+                packaging: 1
             }
         },
         {
-            $unwind: "$ingredients"
+            $unwind: "$packaging"
         },
         {
             $group: {
-                _id: "$ingredients"
+                _id: "$packaging"
             }
         },
         {
@@ -33,7 +33,6 @@ cur = db.product_simplified.aggregate(
 i = 0
 while (cur.hasNext()) {
     data = cur.next()
-    db.ingredients_idx.insert({_id: data._id, idx: i})
+    db.packaging_idx.insert({_id: data._id, idx: i})
     i += 1
-    if (i > 5) break;
 }
