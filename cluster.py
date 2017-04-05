@@ -4,14 +4,14 @@ from scipy.spatial.distance import pdist, squareform
 from sklearn.cluster import AgglomerativeClustering
 
 col_name = 'product_simplified'
-field_name = 'packaging'
+field_name = 'ingredients'
 
-input_limit = 5000
-n_cluster = 600
+input_limit = 2000
+n_cluster = 10
 
 n_cluster_start = 100
 n_cluster_stop = 900
-n_cluster_step = 50
+n_cluster_step = 100
 
 output_field = 'product_name'
 
@@ -75,8 +75,30 @@ def cluster_tags(tags, n_cluster, full):
         n_clusters=n_cluster)
     return clustering.fit(np.vstack(tags))
 
+def get_clustering(tags, tag_names, ids, n_cluster):
+    cluster = cluster_tags(tags, n_cluster, False)
+    labels = cluster.labels_
+
+    clusters = {}
+    clusters_ids = {}
+    for i in range(len(tags)):
+        if not labels[i] in clusters:
+            clusters[labels[i]] = []
+            clusters_ids[labels[i]] = []
+        clusters[labels[i]].append(tags[i])
+        clusters_ids[labels[i]].append(ids[i])
+    
+    for i in clusters:
+        clustroid = pool_tags(np.vstack(clusters[i]))
+        clustroid_idx = [np.array_equal(clustroid, tag) for tag in tags].index(True)
+        print map(lambda tag_name: tag_name.encode('ascii', 'ignore'), tag_names[clustroid_idx]), ':'
+        for name in clusters_ids[i]:
+            print name.encode('ascii', 'ignore')
+        print ''
+
 def find_optimal_n_cluster(tags):
-    for n_cluster in range(n_cluster_start, n_cluster_stop, n_cluster_step):    
+    print 'n_cluster: min average max (cluster_densities)'
+    for n_cluster in range(n_cluster_start, n_cluster_stop + 1, n_cluster_step):    
         cluster = cluster_tags(tags, n_cluster, True)
         labels = cluster.labels_
 
@@ -91,43 +113,12 @@ def find_optimal_n_cluster(tags):
             cluster_densities.append(cluster_density(np.vstack(clusters[i])))
         print n_cluster, ':', np.min(cluster_densities), np.average(cluster_densities), np.max(cluster_densities)    
 
-def get_clustering(tags, ids, n_cluster):
-    cluster = cluster_tags(tags, n_cluster, False)
-    labels = cluster.labels_
-
-    clusters = {}
-    for i in range(len(tags)):
-        if not labels[i] in clusters:
-            clusters[labels[i]] = []
-        clusters[labels[i]].append(ids[i])    
-    
-    for i in clusters:
-        print 'i:', clusters[i], '\n'
-
 if __name__ == "__main__":
     db = pymongo.MongoClient().off
 
     tag_idx, max_tag = get_tag_idx_dict(db)
     ids, tags, tag_names = get_data(db, max_tag)
 
-    #find_optimal_n_cluster(tags)
-    get_clustering(tags, ids, n_cluster)
+    find_optimal_n_cluster(tags)
+    #get_clustering(tags, tag_names, ids, n_cluster)
 
-#5000 points
-#n_cluster: min_density avg_density max_density
-#100 : 0.0 6500.06074191 218772.792008
-#150 : 0.0 10820.3659892 390446.44898
-#200 : 0.0 61221.7208238 7200252.73469
-#250 : 0.0 62274.1109766 7200252.73469
-#300 : 0.0 67873.0152621 7200252.73469
-#350 : 0.0 188130.748153 21743093.25
-#400 : 0.0 168847.228109 21743093.25
-#450 : 0.0 241283.077076 43441281.0
-#500 : 0.0 296262.534177 43441281.0
-#550 : 0.0 284255.623342 43441281.0
-#600 : 0.0 276323.475954 43441281.0
-#650 : 0.0 137471.714788 30375000.0
-#700 : 0.0 39063.3372443 9725425.0
-#750 : 0.0 30113.6955278 9725425.0
-#800 : 0.0 26232.374219 9725425.0
-#850 : 0.0 8754.02482051 4804839.0
