@@ -3,15 +3,15 @@ import numpy as np
 from scipy.spatial.distance import pdist, squareform
 from sklearn.cluster import AgglomerativeClustering
 
-col_name = 'brand_ingredients'
+col_name = 'brand_ingredients_trunc'
 field_name = 'ingredients'
 
-input_limit = 19010
-n_cluster = 10
+input_limit = 100
+n_cluster = 35
 
-n_cluster_start = 300
-n_cluster_stop = 40
-n_cluster_step = 1
+n_cluster_start = 10
+n_cluster_stop = 60
+n_cluster_step = 5
 
 output_field = '_id'
 
@@ -92,8 +92,8 @@ def get_clustering(tags, tag_names, ids, n_cluster):
     for i in clusters:
         clustroid = pool_tags(np.vstack(clusters[i]))
         clustroid_idx = [np.array_equal(clustroid, tag) for tag in tags].index(True)
-        f.write(str(map(lambda tag_name: tag_name.encode('ascii', 'ignore'), tag_names[clustroid_idx])))
-        f.write(':\n')
+        #f.write(str(map(lambda tag_name: tag_name.encode('ascii', 'ignore'), tag_names[clustroid_idx])))
+        #f.write(':\n')
         for name in clusters_ids[i]:
             f.write(name.encode('ascii', 'ignore') + '\n')
         f.write('\n')
@@ -110,10 +110,10 @@ def find_optimal_n_cluster(tags):
                 clusters[labels[i]] = []
             clusters[labels[i]].append(tags[i])
 
-        cluster_densities = []
+        cluster_radiuses = []
         for i in clusters:
-            cluster_densities.append(cluster_radius(np.vstack(clusters[i])))
-        print n_cluster, ':', np.min(cluster_densities), np.average(cluster_densities), np.max(cluster_densities)    
+            cluster_radiuses.append(cluster_radius(np.vstack(clusters[i])))
+        print n_cluster, ':', np.min(cluster_radiuses), np.average(cluster_radiuses), np.max(cluster_radiuses)    
 
 if __name__ == "__main__":
     db = pymongo.MongoClient().off
