@@ -3,17 +3,17 @@ import numpy as np
 from scipy.spatial.distance import pdist, squareform
 from sklearn.cluster import AgglomerativeClustering
 
-col_name = 'product_simplified'
+col_name = 'brand_ingredients'
 field_name = 'ingredients'
 
-input_limit = 2000
+input_limit = 19010
 n_cluster = 10
 
-n_cluster_start = 100
-n_cluster_stop = 900
-n_cluster_step = 100
+n_cluster_start = 300
+n_cluster_stop = 40
+n_cluster_step = 1
 
-output_field = 'product_name'
+output_field = '_id'
 
 def pairwise_jaccard(X):
     return squareform(pdist(X, metric='jaccard'))
@@ -88,16 +88,18 @@ def get_clustering(tags, tag_names, ids, n_cluster):
         clusters[labels[i]].append(tags[i])
         clusters_ids[labels[i]].append(ids[i])
     
+    f = open('clusters.out', 'w')
     for i in clusters:
         clustroid = pool_tags(np.vstack(clusters[i]))
         clustroid_idx = [np.array_equal(clustroid, tag) for tag in tags].index(True)
-        print map(lambda tag_name: tag_name.encode('ascii', 'ignore'), tag_names[clustroid_idx]), ':'
+        f.write(str(map(lambda tag_name: tag_name.encode('ascii', 'ignore'), tag_names[clustroid_idx])))
+        f.write(':\n')
         for name in clusters_ids[i]:
-            print name.encode('ascii', 'ignore')
-        print ''
+            f.write(name.encode('ascii', 'ignore') + '\n')
+        f.write('\n')
 
 def find_optimal_n_cluster(tags):
-    print 'n_cluster: min average max (cluster_densities)'
+    print 'n_cluster: min average max (cluster_radius)'
     for n_cluster in range(n_cluster_start, n_cluster_stop + 1, n_cluster_step):    
         cluster = cluster_tags(tags, n_cluster, True)
         labels = cluster.labels_
@@ -110,7 +112,7 @@ def find_optimal_n_cluster(tags):
 
         cluster_densities = []
         for i in clusters:
-            cluster_densities.append(cluster_density(np.vstack(clusters[i])))
+            cluster_densities.append(cluster_radius(np.vstack(clusters[i])))
         print n_cluster, ':', np.min(cluster_densities), np.average(cluster_densities), np.max(cluster_densities)    
 
 if __name__ == "__main__":
@@ -119,6 +121,5 @@ if __name__ == "__main__":
     tag_idx, max_tag = get_tag_idx_dict(db)
     ids, tags, tag_names = get_data(db, max_tag)
 
-    find_optimal_n_cluster(tags)
-    #get_clustering(tags, tag_names, ids, n_cluster)
-
+    #find_optimal_n_cluster(tags)
+    get_clustering(tags, tag_names, ids, n_cluster)
