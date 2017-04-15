@@ -1,0 +1,44 @@
+: 6273
+Carrefour: 2937
+Auchan: 2313
+U: 2047
+Meijer: 1995
+Leader Price: 1688
+Kroger: 1660
+Casino: 1590
+Ahold: 1370
+Spartan: 1341
+Roundy's: 1299
+Great Value: 1230
+Cora: 1061
+Weis: 1053
+Target Stores: 947
+Shoprite: 944
+Picard: 892
+Coop: 836
+Food Club: 831
+Harris Teeter: 794
+Extracting predicted nutrition grades from file
+Matching count: 296976
+Useful count: 266430
+<brand>: <average_sugars>, <average_salt>, <average_no_additives>, <average_grade>
+Target Stores       : 14.61,  0.92,  1.51,  2.94
+Meijer              : 13.90,  1.75,  2.88,  2.95
+Cora                :  3.42,  0.61,  1.78,  3.07
+Roundy's            : 13.57,  2.08,  2.61,  2.94
+Auchan              :  5.22,  0.76,  1.11,  2.93
+Food Club           : 13.52,  2.72,  2.94,  2.70
+Kroger              : 11.75,  2.37,  3.26,  2.87
+Casino              :  3.84,  0.41,  1.34,  3.03
+Weis                : 13.45,  1.70,  3.07,  2.90
+Shoprite            : 11.33,  1.74,  1.93,  3.02
+Essential Everyday  : 12.61,  2.39,  2.66,  2.93
+Leader Price        :  4.36,  0.53,  1.58,  2.90
+Ahold               : 13.96,  1.15,  2.03,  3.09
+U                   :  4.97,  0.43,  1.40,  3.00
+Coop                :  1.79,  0.52,  1.22,  2.93
+Great Value         : 11.91,  1.75,  2.91,  2.87
+Picard              :  2.92,  0.29,  1.07,  3.60
+Carrefour           :  3.58,  0.51,  1.54,  2.96
+Spartan             : 13.52,  2.17,  2.87,  2.87
+Harris Teeter       : 10.61,  1.66,  2.55,  3.19
