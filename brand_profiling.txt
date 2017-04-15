@@ -21,6 +21,29 @@ Harris Teeter: 794
 Extracting predicted nutrition grades from file
 Matching count: 296976
 Useful count: 266430
+
+Carrefour: 2627
+Auchan: 2002
+Meijer: 1995
+U: 1826
+Kroger: 1659
+Leader Price: 1510
+Ahold: 1370
+Spartan: 1341
+Casino: 1320
+Roundy's: 1299
+Great Value: 1220
+Weis: 1052
+Cora: 957
+Target Stores: 947
+Shoprite: 944
+Food Club: 831
+Harris Teeter: 794
+Picard: 786
+Coop: 693
+Essential Everyday: 683
+Total number used for profiling (top 20): 25856
+
 <brand>: <average_sugars>, <average_salt>, <average_no_additives>, <average_grade>
 Target Stores       : 14.61,  0.92,  1.51,  2.94
 Meijer              : 13.90,  1.75,  2.88,  2.95

@@ -14,9 +14,9 @@ pipeline = [
     { "$group": {"_id": "$brands", "count": {"$sum": 1}}},
     { "$sort": SON([("count", -1)])}
 ]
-
 for x in list(products.aggregate(pipeline))[:20]:
     print("{}: {}".format(x["_id"], x["count"]))
+
 
 
 predicted_grades = {}
@@ -62,7 +62,7 @@ for pd in pds:
             continue
     pd["grade_score"] = score[pd["nutrition_grades"]]
     useful_products.append(pd)
-print("Useful count: {}".format(len(useful_products)))
+print("Useful count: {}\n".format(len(useful_products)))
 
 brands = [pd["brands"] for pd in useful_products]
 brands_count = Counter(brands)
@@ -70,9 +70,14 @@ brands_count = Counter(brands)
 # initialize results for top 20 brands (in terms of total records) for quick study
 top_brands = []
 results = {}
+total_products_used = 0
 for brand,v in brands_count.most_common(20):
     top_brands.append(brand)
+    total_products_used += v
+    print("{}: {}".format(brand, v))
     results[brand] = {"t_sugars_100g": 0, "t_salt_100g": 0, "t_additives_count": 0, "t_grade_score": 0}
+
+print("Total number used for profiling (top 20): {}\n".format(total_products_used))
 
 for pd in useful_products:
     if pd["brands"] in top_brands:
