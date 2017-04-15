@@ -1,0 +1,8 @@
+Total products with ingredients: 247481
+Total number of recorded ingredients: 3135197
+Average number of ingredients per product: 0.0789363475405
+item: (u'water',) , 0.246
+item: (u'sugar',) , 0.265
+item: (u'salt',) , 0.320
+
+------------------------ RULES:
