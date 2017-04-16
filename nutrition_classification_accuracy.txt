@@ -1,0 +1,3 @@
+Total products with grades: 194935
+Training classifier using Random Forest (will take around 30 minutes)
+Accuracy score: 70.23%
