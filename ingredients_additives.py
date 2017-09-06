@@ -38,8 +38,8 @@ reducer = Code("""
 
 DATASET_FILENAME = "dataset-product_id-additives.json"
 try:
-    print("Using processed dataset")
     additives_stats = json.load(open(DATASET_FILENAME, "r"))
+    print("Using processed dataset")
 except:
     print("Building dataset")
     additives_stats = openfood.inline_map_reduce(mapper, reducer)
@@ -65,8 +65,8 @@ print("Number of samples: ", len(ordered_additives))
 
 ordered_additives_split = [ x['value'].split("_") for x in additives_stats ]
 
-minSupport = 0.03
-minConfidence = 0.7
+minSupport = 0.1
+minConfidence = 0.5
 items, rules = runApriori(ordered_additives_split, minSupport, minConfidence)
 printResults(items, rules)
 

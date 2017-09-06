@@ -1,0 +1,21 @@
+Total products with grades: 194935
+Total products without grades: 52546
+Extracting predicted results from file
+Original grade distributions:
+Grade a: 31953
+Grade c: 40006
+Grade b: 29992
+Grade e: 37584
+Grade d: 55400
+Predicted grade distributions:
+Grade a: 7935
+Grade c: 9713
+Grade b: 13629
+Grade e: 5689
+Grade d: 15580
+New grade distributions:
+Grade a: 39888
+Grade c: 49719
+Grade b: 43621
+Grade e: 43273
+Grade d: 70980

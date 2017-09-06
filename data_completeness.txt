@@ -1,0 +1,33 @@
+en:brands-completed: 290692.0
+en:brands-to-be-completed: 28101.0
+en:categories-completed: 83601.0
+en:categories-to-be-completed: 235193.0
+en:characteristics-completed: 72041.0
+en:characteristics-to-be-completed: 246763.0
+en:complete: 58801.0
+en:empty: 93.0
+en:expiration-date-completed: 41865.0
+en:expiration-date-to-be-completed: 276939.0
+en:ingredients-completed: 247427.0
+en:ingredients-to-be-completed: 71377.0
+en:nutrition-facts-completed: 273169.0
+en:nutrition-facts-to-be-completed: 45635.0
+en:packaging-code-completed: 7248.0
+en:packaging-code-to-be-completed: 229721.0
+en:packaging-completed: 78139.0
+en:packaging-to-be-completed: 240656.0
+en:photos-to-be-uploaded: 183964.0
+en:photos-to-be-validated: 68199.0
+en:photos-uploaded: 134840.0
+en:photos-validated: 66641.0
+en:product-name-completed: 300968.0
+en:product-name-to-be-completed: 17824.0
+en:quantity-completed: 103817.0
+en:quantity-to-be-completed: 214977.0
+en:to-be-checked: 58801.0
+en:to-be-completed: 260003.0
+brands              : 91.19%
+categories          : 26.22%
+ingredients         : 77.61%
+nutrition-facts     : 85.69%
+packaging           : 24.51%
